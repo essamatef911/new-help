@@ -38,7 +38,7 @@ Resources:
       KeyName: web 
       ImageId: ami-068663a3c619dd892 
       Tags:
-        - Key: Name
+        - Key: newhelp
           Value: !Sub backend-${ID}
   EIP1:
    Type: AWS::EC2::EIP
