@@ -36,7 +36,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: web 
-      ImageId: ami-068663a3c619dd892 
+      ImageId: ami-007855ac798b5175e 
       Tags:
         - Key: newhelp
           Value: !Sub backend-${ID}
