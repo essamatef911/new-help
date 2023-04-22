@@ -3,33 +3,33 @@ orbs:
   # node: circleci/node@5.1.0
   slack: circleci/slack@4.12.1
 
-commands:
-  destroy_environment:
-    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:5}
-    steps:
-      - run:
-          name: Destroy environment
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:5}
-            aws cloudformation delete-stack --stack-name frontend-<< parameters.Workflow_ID >>
-            aws s3 rm s3://udapeople-edea1 --recursive
-  notify_on_failure:
-    steps:
-      - slack/notify:
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
-  notify_on_success:
-    steps:
-      - slack/notify:
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: success_tagged_deployment_1
+# commands:
+#   destroy_environment:
+#     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+#     parameters:
+#       Workflow_ID:
+#         type: string
+#         default: ${CIRCLE_WORKFLOW_ID:0:5}
+#     steps:
+#       - run:
+#           name: Destroy environment
+#           when: on_fail
+#           command: |
+#             aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:5}
+#             aws cloudformation delete-stack --stack-name frontend-<< parameters.Workflow_ID >>
+#             aws s3 rm s3://udapeople-edea1 --recursive
+#   notify_on_failure:
+#     steps:
+#       - slack/notify:
+#           event: fail
+#           channel: $SLACK_DEFAULT_CHANNEL
+#           template: basic_fail_1
+#   notify_on_success:
+#     steps:
+#       - slack/notify:
+#           event: pass
+#           channel: $SLACK_DEFAULT_CHANNEL
+#           template: success_tagged_deployment_1
 
   revert-migrations:
     description: Revert the last migration
