@@ -142,41 +142,41 @@ jobs:
           command: |
             exit 0
             npm audit
-  # deploy-infrastructure:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           yum install -y tar gzip
-  #     - run:
-  #         name: Ensure back-end infrastructure exists
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file .circleci/files/backend.yml \
-  #             --tags project=udapeople \
-  #             --stack-name "backend" \
-  #             --region us-east-1 \
-  #             --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
-  #     - run:
-  #         name: Ensure front-end infrastructure exist
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file .circleci/files/frontend.yml \
-  #             --tags project=udapeople \
-  #             --stack-name "frontend" \
-  #             --region us-east-1 \
-  #             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
-  #     - run:
-  #         name: Add back-end ip to ansible inventory
-  #         command: |
-  #           aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths:
-  #           - project/.circleci/ansible/inventory.txt
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --stack-name "backend" \
+              --region us-east-1 \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
+              --stack-name "frontend" \
+              --region us-east-1 \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 
   # configure-infrastructure:
   #   docker:
@@ -349,11 +349,11 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [main]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [main]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
